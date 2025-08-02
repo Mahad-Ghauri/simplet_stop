@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:simplet_stop/providers/audio/audio_provider.dart';
 
 class SampleAudioButtons extends StatelessWidget {
+  const SampleAudioButtons({super.key});
+
   @override
   Widget build(BuildContext context) {
     final audioProvider = Provider.of<AudioPlayerProvider>(context, listen: false);

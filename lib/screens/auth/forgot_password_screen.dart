@@ -7,7 +7,6 @@ import '../../widgets/common/loading_widget.dart';
 import '../../utils/theme.dart';
 import '../../utils/validators.dart';
 import '../../utils/helpers.dart';
-import '../../utils/constants.dart';
 import '../../routes/app_routes.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {

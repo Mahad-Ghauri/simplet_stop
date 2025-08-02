@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, prefer_final_fields
+// ignore_for_file: unused_field, prefer_final_fields, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -253,7 +253,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            localizationService.tr('auth.name') ?? 'Name',
+                                            localizationService.tr('auth.name'),
                                             style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,

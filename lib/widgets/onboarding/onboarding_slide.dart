@@ -147,19 +147,19 @@ class OnboardingData {
       title: 'Welcome to SimpeltStop',
       description:
           'Your journey to quit nicotine starts here. We\'re here to support you every step of the way with proven methods and personalized guidance.',
-      imagePath: 'assets/images/onboarding_1.png',
+      imagePath: 'assets/images/slide 1.png',
     ),
     const OnboardingData(
       title: 'Track Your Progress',
       description:
           'Monitor your journey with detailed progress tracking. See how many days you\'ve been smoke-free and celebrate your milestones.',
-      imagePath: 'assets/images/onboarding_2.png',
+      imagePath: 'assets/images/slide 2.png',
     ),
     const OnboardingData(
       title: 'Audio Support & Education',
       description:
           'Access educational content and audio boosters to help you stay motivated. Listen to calming audio during cravings.',
-      imagePath: 'assets/images/onboarding_3.png',
+      imagePath: 'assets/images/slide 3.png',
     ),
   ];
 }

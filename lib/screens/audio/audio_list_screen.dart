@@ -85,8 +85,8 @@ class _AudioListScreenState extends State<AudioListScreen>
       // Educational content
       AudioContent(
         id: 'edu_1',
-        title: 'Learning Techniques',
-        description: 'Improve your study methods with proven techniques',
+        title: 'Bird Chirping sound',
+        description: 'Relax by listening to the sound of birds chirping',
         type: 'educational',
         audioUrl: 'assets/audio/sample.mp3',
         duration: const Duration(minutes: 2, seconds: 30),

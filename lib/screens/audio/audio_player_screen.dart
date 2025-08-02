@@ -1,7 +1,6 @@
 // lib/screens/audio/audio_player_screen.dart
 // ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -34,13 +33,9 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
       duration: const Duration(seconds: 4),
       vsync: this,
     );
-    _breathingAnimation = Tween<double>(
-      begin: 0.9,
-      end: 1.1,
-    ).animate(CurvedAnimation(
-      parent: _breathingController,
-      curve: Curves.easeInOut,
-    ));
+    _breathingAnimation = Tween<double>(begin: 0.9, end: 1.1).animate(
+      CurvedAnimation(parent: _breathingController, curve: Curves.easeInOut),
+    );
 
     _pulseController = AnimationController(
       duration: const Duration(seconds: 2),
@@ -49,10 +44,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
     _pulseAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeOut));
   }
 
   @override
@@ -78,11 +70,14 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallScreen = screenSize.width < 360;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/image/background.png'),
+            image: AssetImage('assets/images/background.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -105,7 +100,10 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
                   children: [
                     // Header
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isSmallScreen ? 16 : 20,
+                        vertical: 10,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -120,12 +118,16 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
                               size: 28,
                             ),
                           ),
-                          const Text(
-                            'Stress-Free Breathing',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
+                          Flexible(
+                            child: Text(
+                              'Stress-Free Breathing',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: isSmallScreen ? 16 : 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           IconButton(
@@ -145,32 +147,42 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
 
                     const Spacer(flex: 2),
 
-                    _buildBreathingCircle(audioProvider),
+                    _buildBreathingCircle(audioProvider, screenSize),
 
                     const Spacer(flex: 1),
 
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isSmallScreen ? 20 : 40,
+                      ),
                       child: Text(
-                        audioProvider.currentSong ?? 'Take a deep breath in through your nose...',
-                        style: const TextStyle(
+                        audioProvider.currentSong ??
+                            'Take a deep breath in through your nose...',
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: isSmallScreen ? 14 : 16,
                           fontWeight: FontWeight.w300,
                         ),
                         textAlign: TextAlign.center,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
 
                     if (audioProvider.errorMessage != null)
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isSmallScreen ? 20 : 40,
+                          vertical: 10,
+                        ),
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
                             color: Colors.red.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.red.withOpacity(0.5)),
+                            border: Border.all(
+                              color: Colors.red.withOpacity(0.5),
+                            ),
                           ),
                           child: Row(
                             children: [
@@ -187,6 +199,8 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
                                     color: Colors.white,
                                     fontSize: 14,
                                   ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
@@ -196,29 +210,20 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
 
                     const Spacer(flex: 2),
 
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30),
-                      child: AudioProgressBar(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isSmallScreen ? 20 : 30,
+                      ),
+                      child: const AudioProgressBar(),
                     ),
 
                     const SizedBox(height: 30),
 
-                    _buildControlButtons(audioProvider),
+                    _buildControlButtons(audioProvider, isSmallScreen),
 
                     const SizedBox(height: 40),
 
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildBottomTab(0, Icons.nature, 'Nature'),
-                          _buildBottomTab(1, Icons.grain, 'Rain'),
-                          _buildBottomTab(2, Icons.waves, 'Ocean'),
-                          _buildBottomTab(3, Icons.music_note, 'Music'),
-                        ],
-                      ),
-                    ),
+                    _buildBottomTabs(isSmallScreen),
 
                     const SizedBox(height: 30),
                   ],
@@ -231,7 +236,10 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
     );
   }
 
-  Widget _buildBreathingCircle(AudioPlayerProvider audioProvider) {
+  Widget _buildBreathingCircle(
+    AudioPlayerProvider audioProvider,
+    Size screenSize,
+  ) {
     String displayText = 'Inhale';
     if (audioProvider.isLoading) {
       displayText = 'Loading...';
@@ -245,10 +253,16 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
       stopAnimations();
     }
 
+    // Calculate responsive sizes
+    final maxCircleSize = screenSize.width * 0.75;
+    final circleSize = maxCircleSize.clamp(200.0, 300.0);
+    final basePulseSize = circleSize * 0.67; // 200/300 ratio
+    final maxPulseSize = circleSize * 1.1; // Limit pulse expansion
+
     return Center(
       child: SizedBox(
-        width: 300,
-        height: 300,
+        width: circleSize,
+        height: circleSize,
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -260,14 +274,21 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
                     alignment: Alignment.center,
                     children: List.generate(3, (index) {
                       double delay = index * 0.3;
-                      double animationValue = (_pulseAnimation.value - delay).clamp(0.0, 1.0);
+                      double animationValue = (_pulseAnimation.value - delay)
+                          .clamp(0.0, 1.0);
+                      final pulseSize =
+                          basePulseSize +
+                          (animationValue * (maxPulseSize - basePulseSize)) +
+                          (index * 20);
                       return Container(
-                        width: 200 + (animationValue * 100) + (index * 30),
-                        height: 200 + (animationValue * 100) + (index * 30),
+                        width: pulseSize,
+                        height: pulseSize,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.3 * (1 - animationValue)),
+                            color: Colors.white.withOpacity(
+                              0.3 * (1 - animationValue),
+                            ),
                             width: 2,
                           ),
                         ),
@@ -280,10 +301,12 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
               animation: _breathingAnimation,
               builder: (context, child) {
                 return Transform.scale(
-                  scale: audioProvider.isPlaying ? _breathingAnimation.value : 1.0,
+                  scale: audioProvider.isPlaying
+                      ? _breathingAnimation.value
+                      : 1.0,
                   child: Container(
-                    width: 200,
-                    height: 200,
+                    width: basePulseSize,
+                    height: basePulseSize,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
@@ -310,12 +333,16 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
                               children: [
                                 Text(
                                   displayText,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 28,
+                                    fontSize:
+                                        circleSize *
+                                        0.09, // Responsive font size
                                     fontWeight: FontWeight.w300,
                                   ),
                                   textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 if (audioProvider.currentAudioThumbnail != null)
                                   Container(
@@ -324,19 +351,22 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
                                     height: 40,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      border: Border.all(color: Colors.white.withOpacity(0.5)),
+                                      border: Border.all(
+                                        color: Colors.white.withOpacity(0.5),
+                                      ),
                                     ),
                                     child: ClipOval(
                                       child: Image.network(
                                         audioProvider.currentAudioThumbnail!,
                                         fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return const Icon(
-                                            Icons.music_note,
-                                            size: 20,
-                                            color: Colors.white,
-                                          );
-                                        },
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              return const Icon(
+                                                Icons.music_note,
+                                                size: 20,
+                                                color: Colors.white,
+                                              );
+                                            },
                                       ),
                                     ),
                                   ),
@@ -353,41 +383,76 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
     );
   }
 
-  Widget _buildControlButtons(AudioPlayerProvider audioProvider) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+Widget _buildControlButtons(
+  AudioPlayerProvider audioProvider,
+  bool isSmallScreen,
+) {
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 10 : 20),
+    child: Column(
       children: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.tune,
-            color: Colors.white,
-            size: 24,
-          ),
+        // Volume Control - placed above the buttons
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 20 : 40),
+          child: const VolumeControl(),
         ),
-        const SizedBox(
-          width: 40,
-          height: 40,
-          child: VolumeControl(),
-        ),
-        const SizedBox(
-          width: 64,
-          height: 64,
-          child: AudioControlButtons(),
-        ),
-        Text(
-          audioProvider.formatDuration(audioProvider.duration),
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w300,
-          ),
+        
+        const SizedBox(height: 20),
+        
+        // Control buttons row
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            // Settings/Tune button
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.tune, color: Colors.white, size: 24),
+            ),
+            
+            // Audio control buttons (play/pause/etc)
+            const AudioControlButtons(),
+            
+            // Duration text
+            SizedBox(
+              width: isSmallScreen ? 50 : 60,
+              child: Text(
+                audioProvider.formatDuration(audioProvider.duration),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,
+                ),
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
         ),
       ],
+    ),
+  );
+}
+  Widget _buildBottomTabs(bool isSmallScreen) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: isSmallScreen ? 10 : 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildBottomTab(0, Icons.nature, 'Nature', isSmallScreen),
+          _buildBottomTab(1, Icons.grain, 'Rain', isSmallScreen),
+          _buildBottomTab(2, Icons.waves, 'Ocean', isSmallScreen),
+          _buildBottomTab(3, Icons.music_note, 'Music', isSmallScreen),
+        ],
+      ),
     );
   }
 
-  Widget _buildBottomTab(int index, IconData icon, String label) {
+  Widget _buildBottomTab(
+    int index,
+    IconData icon,
+    String label,
+    bool isSmallScreen,
+  ) {
     bool isSelected = selectedTab == index;
     return GestureDetector(
       onTap: () {
@@ -402,16 +467,18 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen>
           Icon(
             icon,
             color: isSelected ? Colors.white : Colors.white.withOpacity(0.6),
-            size: 24,
+            size: isSmallScreen ? 20 : 24,
           ),
           const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
               color: isSelected ? Colors.white : Colors.white.withOpacity(0.6),
-              fontSize: 12,
+              fontSize: isSmallScreen ? 10 : 12,
               fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

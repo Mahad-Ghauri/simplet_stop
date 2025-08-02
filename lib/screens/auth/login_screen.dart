@@ -237,8 +237,9 @@ Widget build(BuildContext context) {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Color(0xFFE8F5E8), // Light green at top
-                Color(0xFFF0F8F0), // Lighter green at bottom
+                 Colors.white, // Fixed: Changed to white for better contrast
+                Color(0xFFA3E4D7), // Light green at top
+               // Lighter green at bottom
               ],
             ),
           ),
@@ -290,7 +291,7 @@ Widget build(BuildContext context) {
                                       SizedBox(
                                         height: 80,
                                         child: Image.asset(
-                                          'assets/images/simpelt_stop_logo_new.png',
+                                          'assets/images/logo.png',
                                           height: 80,
                                           fit: BoxFit.contain,
                                           errorBuilder:
@@ -298,7 +299,7 @@ Widget build(BuildContext context) {
                                                 return const Icon(
                                                   Icons.app_registration,
                                                   size: 80,
-                                                  color: Color(0xFF4CAF50),
+                                                  color:Color(0xFF1ABC9C),
                                                 );
                                               },
                                         ),
@@ -413,7 +414,7 @@ Widget build(BuildContext context) {
                                                     'auth.forgot_code',
                                                   ),
                                                   style: const TextStyle(
-                                                    color: Color(0xFF4CAF50),
+                                                    color: Color(0xFF48C9B0),
                                                     fontSize: 14,
                                                     fontWeight:
                                                         FontWeight.w500,
@@ -488,13 +489,11 @@ Widget build(BuildContext context) {
                                               height: 20,
                                               decoration: BoxDecoration(
                                                 color: _rememberMe
-                                                    ? const Color(0xFF4CAF50)
+                                                    ? Color(0xFF48C9B0)
                                                     : Colors.transparent,
                                                 border: Border.all(
                                                   color: _rememberMe
-                                                      ? const Color(
-                                                          0xFF4CAF50,
-                                                        )
+                                                      ? const Color(0xFF48C9B0)
                                                       : Colors.grey[400]!,
                                                   width: 2,
                                                 ),
@@ -542,9 +541,7 @@ Widget build(BuildContext context) {
                                               ? null
                                               : _login,
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: const Color(
-                                              0xFF4CAF50,
-                                            ),
+                                            backgroundColor: Color(0xFF48C9B0),
                                             foregroundColor: Colors.white,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
@@ -597,7 +594,7 @@ Widget build(BuildContext context) {
                                                     'auth.create_account_link',
                                                   ),
                                                   style: const TextStyle(
-                                                    color: Color(0xFF4CAF50),
+                                                    color: Color(0xFF48C9B0),
                                                     fontSize: 14,
                                                     fontWeight:
                                                         FontWeight.w600,
@@ -619,7 +616,7 @@ Widget build(BuildContext context) {
                                             'auth.forgot_code',
                                           ),
                                           style: const TextStyle(
-                                            color: Color(0xFF4CAF50),
+                                            color:Color(0xFF48C9B0),
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500,
                                           ),

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simplet_stop/providers/authentication/auth_provider.dart';

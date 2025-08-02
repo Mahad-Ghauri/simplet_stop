@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "384636101779",
+    "project_id": "simplet-8d2b3",
+    "storage_bucket": "simplet-8d2b3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384636101779:android:c7e8d70723dbb84efa1966",
+        "android_client_info": {
+          "package_name": "com.example.simplet_stop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlYHAYYCGwt7iQ3eBGsHaoYxYcVVfxgcs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

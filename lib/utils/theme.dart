@@ -6,8 +6,8 @@ class AppTheme {
   static const Color primaryColor = Color(
     0xFF1ABC9C,
   ); // Green for health/growth
-  static const Color secondaryColor = Color(0xFF4CAF50);
-  static const Color accentColor = Color(0xFF81C784);
+  static const Color secondaryColor = Color(0xFF76D7C4);
+  static const Color accentColor = Color(0xFFA3E4D7);
   static const Color backgroundColor = Color(0xFFF5F5F5);
   static const Color surfaceColor = Colors.white;
   static const Color errorColor = Color(0xFFE53935);

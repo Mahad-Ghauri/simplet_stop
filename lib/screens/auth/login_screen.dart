@@ -226,421 +226,478 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // Fixed version - key changes in the build method
 
-@override
-Widget build(BuildContext context) {
-  return Consumer2<AuthProvider, LocalizationService>(
-    builder: (context, authProvider, localizationService, child) {
-      return Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                 Colors.white, // Fixed: Changed to white for better contrast
-                Color(0xFFA3E4D7), // Light green at top
-               // Lighter green at bottom
-              ],
+  @override
+  Widget build(BuildContext context) {
+    return Consumer2<AuthProvider, LocalizationService>(
+      builder: (context, authProvider, localizationService, child) {
+        return Scaffold(
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.white, // Fixed: Changed to white for better contrast
+                  Color(0xFFA3E4D7), // Light green at top
+                  // Lighter green at bottom
+                ],
+              ),
             ),
-          ),
-          child: SafeArea(
-            child: Stack(
-              children: [
-                // Main content with proper spacing for language button
-                Positioned.fill(
-                  child: LoadingOverlay(
-                    isLoading: authProvider.isLoading,
-                    loadingMessage: localizationService.tr('auth.signing_in'),
-                    child: SingleChildScrollView(
-                      // FIXED: Added top padding to account for language button
-                      padding: const EdgeInsets.fromLTRB(24, 80, 24, 20), // Increased top padding from 60 to 80
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight:
-                              MediaQuery.of(context).size.height -
-                              MediaQuery.of(context).padding.top -
-                              MediaQuery.of(context).padding.bottom -
-                              100, // Adjusted to account for new padding
-                        ),
-                        child: IntrinsicHeight(
-                          child: Column(
-                            children: [
-                              // Main content container
-                              Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(32),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.08),
-                                      blurRadius: 20,
-                                      offset: const Offset(0, 10),
-                                    ),
-                                  ],
-                                ),
-                                child: Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      // Logo with error handling
-                                      SizedBox(
-                                        height: 80,
-                                        child: Image.asset(
-                                          'assets/images/logo.png',
+            child: SafeArea(
+              child: Stack(
+                children: [
+                  // Main content with proper spacing for language button
+                  Positioned.fill(
+                    child: LoadingOverlay(
+                      isLoading: authProvider.isLoading,
+                      loadingMessage: localizationService.tr('auth.signing_in'),
+                      child: SingleChildScrollView(
+                        // FIXED: Added top padding to account for language button
+                        padding: const EdgeInsets.fromLTRB(
+                          24,
+                          80,
+                          24,
+                          20,
+                        ), // Increased top padding from 60 to 80
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight:
+                                MediaQuery.of(context).size.height -
+                                MediaQuery.of(context).padding.top -
+                                MediaQuery.of(context).padding.bottom -
+                                100, // Adjusted to account for new padding
+                          ),
+                          child: IntrinsicHeight(
+                            child: Column(
+                              children: [
+                                // Main content container
+                                Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.all(32),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.08),
+                                        blurRadius: 20,
+                                        offset: const Offset(0, 10),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Form(
+                                    key: _formKey,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        // Logo with error handling
+                                        SizedBox(
                                           height: 80,
-                                          fit: BoxFit.contain,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                                return const Icon(
-                                                  Icons.app_registration,
-                                                  size: 80,
-                                                  color:Color(0xFF1ABC9C),
-                                                );
-                                              },
+                                          child: Image.asset(
+                                            'assets/images/logo.png',
+                                            height: 80,
+                                            fit: BoxFit.contain,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                                  return const Icon(
+                                                    Icons.app_registration,
+                                                    size: 80,
+                                                    color: Color(0xFF1ABC9C),
+                                                  );
+                                                },
+                                          ),
                                         ),
-                                      ),
 
-                                      const SizedBox(height: 32),
+                                        const SizedBox(height: 32),
 
-                                      // Welcome text
-                                      Text(
-                                        localizationService.tr(
-                                          'auth.welcome',
+                                        // Welcome text
+                                        Text(
+                                          localizationService.tr(
+                                            'auth.welcome',
+                                          ),
+                                          style: const TextStyle(
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
                                         ),
-                                        style: const TextStyle(
-                                          fontSize: 32,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        localizationService.tr(
-                                          'auth.journey_subtitle',
-                                        ),
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey[600],
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-
-                                      const SizedBox(height: 40),
-
-                                      // Email field
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            localizationService.tr(
-                                              'auth.email',
-                                            ),
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black,
-                                            ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          localizationService.tr(
+                                            'auth.journey_subtitle',
                                           ),
-                                          const SizedBox(height: 8),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[50],
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              border: Border.all(
-                                                color: Colors.grey[200]!,
-                                              ),
-                                            ),
-                                            child: TextFormField(
-                                              controller: _emailController,
-                                              validator:
-                                                  Validators.validateEmail,
-                                              keyboardType:
-                                                  TextInputType.emailAddress,
-                                              decoration: InputDecoration(
-                                                hintText: 'din@email.dk',
-                                                hintStyle: TextStyle(
-                                                  color: Colors.grey[400],
-                                                ),
-                                                prefixIcon: Icon(
-                                                  Icons.email_outlined,
-                                                  color: Colors.grey[400],
-                                                ),
-                                                border: InputBorder.none,
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 16,
-                                                      vertical: 16,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                      const SizedBox(height: 20),
-
-                                      // Password field
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
-                                            children: [
-                                              Text(
-                                                localizationService.tr(
-                                                  'auth.password',
-                                                ),
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                              TextButton(
-                                                onPressed:
-                                                    _navigateToForgotPassword,
-                                                child: Text(
-                                                  localizationService.tr(
-                                                    'auth.forgot_code',
-                                                  ),
-                                                  style: const TextStyle(
-                                                    color: Color(0xFF48C9B0),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[50],
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              border: Border.all(
-                                                color: Colors.grey[200]!,
-                                              ),
-                                            ),
-                                            child: TextFormField(
-                                              controller: _passwordController,
-                                              validator:
-                                                  Validators.validatePassword,
-                                              obscureText: _obscurePassword,
-                                              decoration: InputDecoration(
-                                                hintText: '••••••••',
-                                                hintStyle: TextStyle(
-                                                  color: Colors.grey[400],
-                                                ),
-                                                prefixIcon: Icon(
-                                                  Icons.lock_outline,
-                                                  color: Colors.grey[400],
-                                                ),
-                                                suffixIcon: IconButton(
-                                                  icon: Icon(
-                                                    _obscurePassword
-                                                        ? Icons.visibility_off
-                                                        : Icons.visibility,
-                                                    color: Colors.grey[400],
-                                                  ),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _obscurePassword =
-                                                          !_obscurePassword;
-                                                    });
-                                                  },
-                                                ),
-                                                border: InputBorder.none,
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 16,
-                                                      vertical: 16,
-                                                    ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                      const SizedBox(height: 20),
-
-                                      // Remember me checkbox
-                                      Row(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                _rememberMe = !_rememberMe;
-                                              });
-                                            },
-                                            child: Container(
-                                              width: 20,
-                                              height: 20,
-                                              decoration: BoxDecoration(
-                                                color: _rememberMe
-                                                    ? Color(0xFF48C9B0)
-                                                    : Colors.transparent,
-                                                border: Border.all(
-                                                  color: _rememberMe
-                                                      ? const Color(0xFF48C9B0)
-                                                      : Colors.grey[400]!,
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                              ),
-                                              child: _rememberMe
-                                                  ? const Icon(
-                                                      Icons.check,
-                                                      color: Colors.white,
-                                                      size: 14,
-                                                    )
-                                                  : null,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 12),
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                _rememberMe = !_rememberMe;
-                                              });
-                                            },
-                                            child: Text(
-                                              localizationService.tr(
-                                                'auth.remember_me',
-                                              ),
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                      const SizedBox(height: 32),
-
-                                      // Login button
-                                      SizedBox(
-                                        width: double.infinity,
-                                        height: 52,
-                                        child: ElevatedButton(
-                                          onPressed: authProvider.isLoading
-                                              ? null
-                                              : _login,
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Color(0xFF48C9B0),
-                                            foregroundColor: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            elevation: 0,
-                                          ),
-                                          child: authProvider.isLoading
-                                              ? const SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        color: Colors.white,
-                                                        strokeWidth: 2,
-                                                      ),
-                                                )
-                                              : Text(
-                                                  localizationService.tr(
-                                                    'auth.sign_in',
-                                                  ),
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w600,
-                                                  ),
-                                                ),
-                                        ),
-                                      ),
-
-                                      const SizedBox(height: 24),
-
-                                      // Register link
-                                      RichText(
-                                        text: TextSpan(
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 16,
                                             color: Colors.grey[600],
                                           ),
+                                          textAlign: TextAlign.center,
+                                        ),
+
+                                        const SizedBox(height: 40),
+
+                                        // Email field
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            TextSpan(
-                                              text:
-                                                  '${localizationService.tr('auth.dont_have_account')} ',
+                                            Text(
+                                              localizationService.tr(
+                                                'auth.email',
+                                              ),
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black,
+                                              ),
                                             ),
-                                            WidgetSpan(
-                                              child: GestureDetector(
-                                                onTap: _navigateToRegister,
-                                                child: Text(
-                                                  localizationService.tr(
-                                                    'auth.create_account_link',
+                                            const SizedBox(height: 8),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[50],
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                border: Border.all(
+                                                  color: Colors.grey[200]!,
+                                                ),
+                                              ),
+                                              child: TextFormField(
+                                                controller: _emailController,
+                                                validator:
+                                                    Validators.validateEmail,
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                decoration: InputDecoration(
+                                                  hintText: 'din@email.dk',
+                                                  hintStyle: TextStyle(
+                                                    color: Colors.grey[400],
                                                   ),
-                                                  style: const TextStyle(
-                                                    color: Color(0xFF48C9B0),
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w600,
+                                                  prefixIcon: Icon(
+                                                    Icons.email_outlined,
+                                                    color: Colors.grey[400],
                                                   ),
+                                                  border: InputBorder.none,
+                                                  contentPadding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 16,
+                                                      ),
                                                 ),
                                               ),
                                             ),
                                           ],
                                         ),
-                                      ),
 
-                                      const SizedBox(height: 16),
+                                        const SizedBox(height: 20),
 
-                                      // Forgot password link
-                                      GestureDetector(
-                                        onTap: _navigateToForgotPassword,
-                                        child: Text(
-                                          localizationService.tr(
-                                            'auth.forgot_code',
-                                          ),
-                                          style: const TextStyle(
-                                            color:Color(0xFF48C9B0),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
+                                        // Password field
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  localizationService.tr(
+                                                    'auth.password',
+                                                  ),
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[50],
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                border: Border.all(
+                                                  color: Colors.grey[200]!,
+                                                ),
+                                              ),
+                                              child: TextFormField(
+                                                controller: _passwordController,
+                                                validator:
+                                                    Validators.validatePassword,
+                                                obscureText: _obscurePassword,
+                                                decoration: InputDecoration(
+                                                  hintText: '••••••••',
+                                                  hintStyle: TextStyle(
+                                                    color: Colors.grey[400],
+                                                  ),
+                                                  prefixIcon: Icon(
+                                                    Icons.lock_outline,
+                                                    color: Colors.grey[400],
+                                                  ),
+                                                  suffixIcon: IconButton(
+                                                    icon: Icon(
+                                                      _obscurePassword
+                                                          ? Icons.visibility_off
+                                                          : Icons.visibility,
+                                                      color: Colors.grey[400],
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        _obscurePassword =
+                                                            !_obscurePassword;
+                                                      });
+                                                    },
+                                                  ),
+                                                  border: InputBorder.none,
+                                                  contentPadding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 16,
+                                                      ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        const SizedBox(height: 20),
+
+                                        // Remember me checkbox
+                                        Row(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  _rememberMe = !_rememberMe;
+                                                });
+                                              },
+
+                                              child: Container(
+                                                width: 20,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                  color: _rememberMe
+                                                      ? Color(0xFF48C9B0)
+                                                      : Colors.transparent,
+                                                  border: Border.all(
+                                                    color: _rememberMe
+                                                        ? const Color(
+                                                            0xFF48C9B0,
+                                                          )
+                                                        : Colors.grey[400]!,
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                ),
+                                                child: _rememberMe
+                                                    ? const Icon(
+                                                        Icons.check,
+                                                        color: Colors.white,
+                                                        size: 14,
+                                                      )
+                                                    : null,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  _rememberMe = !_rememberMe;
+                                                });
+                                              },
+                                              child: Text(
+                                                localizationService.tr(
+                                                  'auth.remember_me',
+                                                ),
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 120),
+                                            TextButton(
+                                              onPressed:
+                                                  _navigateToForgotPassword,
+                                              child: Text(
+                                                localizationService.tr(
+                                                  'auth.forgot_code',
+                                                ),
+                                                style: const TextStyle(
+                                                  color: Color(0xFF48C9B0),
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        const SizedBox(height: 32),
+
+                                        // Login button
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: 52,
+                                          child: ElevatedButton(
+                                            onPressed: authProvider.isLoading
+                                                ? null
+                                                : _login,
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Color(
+                                                0xFF48C9B0,
+                                              ),
+                                              foregroundColor: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              elevation: 0,
+                                            ),
+                                            child: authProvider.isLoading
+                                                ? const SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                          color: Colors.white,
+                                                          strokeWidth: 2,
+                                                        ),
+                                                  )
+                                                : Text(
+                                                    localizationService.tr(
+                                                      'auth.sign_in',
+                                                    ),
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+
+                                        const SizedBox(height: 24),
+
+                                        // Register link
+                                        RichText(
+                                          text: TextSpan(
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[600],
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text:
+                                                    '${localizationService.tr('auth.dont_have_account')} ',
+                                              ),
+                                              WidgetSpan(
+                                                child: GestureDetector(
+                                                  onTap: _navigateToRegister,
+                                                  child: Text(
+                                                    localizationService.tr(
+                                                      'auth.create_account_link',
+                                                    ),
+                                                    style: const TextStyle(
+                                                      color: Color(0xFF48C9B0),
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 16),
+
+                                        // Forgot password link
+                                        GestureDetector(
+                                          onTap: _navigateToForgotPassword,
+                                          child: Text(
+                                            localizationService.tr(
+                                              'auth.forgot_code',
+                                            ),
+                                            style: const TextStyle(
+                                              color: Color(0xFF48C9B0),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
+
+                                // Flexible spacer
+                                Flexible(child: Container(height: 40)),
+
+                                // Copyright footer
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 20),
+                                  child: Text(
+                                    localizationService.tr('footer.copyright'),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey[600],
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Language toggle button (positioned on top with higher z-index)
+                  Positioned(
+                    top: 16,
+                    right: 16,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          _showLanguageSelector(context, localizationService);
+                        },
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.9),
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
                               ),
-
-                              // Flexible spacer
-                              Flexible(child: Container(height: 40)),
-
-                              // Copyright footer
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: Text(
-                                  localizationService.tr('footer.copyright'),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey[600],
-                                  ),
-                                  textAlign: TextAlign.center,
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                _getLanguageFlag(
+                                  localizationService.currentLanguage,
                                 ),
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                              const SizedBox(width: 4),
+                              Icon(
+                                Icons.keyboard_arrow_down,
+                                size: 16,
+                                color: Colors.grey[600],
                               ),
                             ],
                           ),
@@ -648,61 +705,14 @@ Widget build(BuildContext context) {
                       ),
                     ),
                   ),
-                ),
-                
-                // Language toggle button (positioned on top with higher z-index)
-                Positioned(
-                  top: 16,
-                  right: 16,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        _showLanguageSelector(context, localizationService);
-                      },
-                      borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.9),
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              _getLanguageFlag(
-                                localizationService.currentLanguage,
-                              ),
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                            const SizedBox(width: 4),
-                            Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 16,
-                              color: Colors.grey[600],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   String _getLanguageFlag(String languageCode) {
     switch (languageCode) {

@@ -215,32 +215,35 @@ class _CravingTimerScreenState extends State<CravingTimerScreen>
         elevation: 0,
       ),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Column(
             children: [
               // Header
               _buildHeader(),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 32),
 
               // Timer Display
               _buildTimerDisplay(),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 32),
 
               // Timer Controls
               _buildTimerControls(),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 32),
 
               // Calming Audio
               _buildCalmingAudio(),
 
-              const Spacer(),
+              const SizedBox(height: 24),
 
               // Motivational Message
               _buildMotivationalMessage(),
+              
+              // Add some bottom padding to ensure content is never cut off
+              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -280,9 +283,14 @@ class _CravingTimerScreenState extends State<CravingTimerScreen>
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
+        // Make timer responsive to screen size
+        final screenWidth = MediaQuery.of(context).size.width;
+        final timerSize = (screenWidth * 0.6).clamp(200.0, 250.0);
+        final progressSize = timerSize - 50;
+        
         return Container(
-          width: 250,
-          height: 250,
+          width: timerSize,
+          height: timerSize,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: _isTimerCompleted
@@ -293,8 +301,8 @@ class _CravingTimerScreenState extends State<CravingTimerScreen>
             children: [
               Center(
                 child: SizedBox(
-                  width: 200,
-                  height: 200,
+                  width: progressSize,
+                  height: progressSize,
                   child: CircularProgressIndicator(
                     value: _animation.value,
                     strokeWidth: 8,
@@ -314,7 +322,7 @@ class _CravingTimerScreenState extends State<CravingTimerScreen>
                     Text(
                       _formatTime(_remainingSeconds),
                       style: AppTheme.headingLarge.copyWith(
-                        fontSize: 48,
+                        fontSize: screenWidth < 400 ? 36 : 48,
                         fontWeight: FontWeight.bold,
                         color: _isTimerCompleted
                             ? AppTheme.successColor
@@ -389,7 +397,12 @@ class _CravingTimerScreenState extends State<CravingTimerScreen>
 
   Widget _buildCalmingAudio() {
     if (_isLoadingAudio) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
     final calmingAudios = _getCalmingAudio();

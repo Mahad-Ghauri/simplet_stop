@@ -12,7 +12,7 @@ class AppTheme {
   static const Color surfaceColor = Colors.white;
   static const Color errorColor = Color(0xFFE53935);
   static const Color warningColor = Color(0xFFFF9800);
-  static const Color successColor = Color(0xFF4CAF50);
+  static const Color successColor = Color(0xFF76D7C4);
 
   // Text Colors
   static const Color textPrimary = Color(0xFF212121);

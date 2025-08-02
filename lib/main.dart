@@ -14,7 +14,7 @@ import 'services/storage_service.dart';
 import 'providers/progress/progress_provider.dart';
 import 'providers/audio/audio_provider.dart';
 import 'providers/payment_provider.dart';
-import 'screens/splash/splash_screen.dart';
+import 'screens/welcome/welcome_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
             routes: AppRoutes.routes,
             onGenerateRoute: AppRoutes.onGenerateRoute,
             debugShowCheckedModeBanner: false,
-            home: const SplashScreen(),
+            home: const WelcomeScreen(),
           );
         },
       ),

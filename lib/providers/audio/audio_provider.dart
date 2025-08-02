@@ -1,5 +1,5 @@
 // lib/providers/audio/audio_provider.dart
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, unused_element
 
 import 'package:flutter/foundation.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -166,7 +166,7 @@ class AudioPlayerProvider extends ChangeNotifier {
 
       final cleanAssetPath = _getAssetPath(assetPath);
       debugPrint('Playing from asset: $cleanAssetPath (original: $assetPath)');
-      debugPrint('Is Web: ${kIsWeb}');
+      debugPrint('Is Web: $kIsWeb');
 
       // For web, we need to handle assets differently
       if (kIsWeb) {

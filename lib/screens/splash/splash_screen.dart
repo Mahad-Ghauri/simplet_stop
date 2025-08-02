@@ -94,6 +94,10 @@ class _SplashScreenState extends State<SplashScreen>
     AppRoutes.pushAndRemoveUntil(context, initialRoute);
   }
 
+  void _navigateToLogin() {
+    AppRoutes.pushAndRemoveUntil(context, AppRoutes.login);
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -127,42 +131,70 @@ class _SplashScreenState extends State<SplashScreen>
               builder: (context, child) {
                 return Column(
                   children: [
-                    // Header with logo
+                    // Header with logo and login button
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: FadeTransition(
-                          opacity: _logoFadeAnimation,
-                          child: ScaleTransition(
-                            scale: _scaleAnimation,
-                            child: SizedBox(
-                              width: 80,
-                              height: 80,
-                              child: Image.asset(
-                                'assets/images/logo.png',
-                                fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    width: 80,
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(16),
+                      child: Row(
+                        children: [
+                          // Logo and title on the left
+                          Expanded(
+                            child: FadeTransition(
+                              opacity: _logoFadeAnimation,
+                              child: ScaleTransition(
+                                scale: _scaleAnimation,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Logo text
+                                   Image.asset(
+                                      'assets/images/logo.png',
+                                      width: 120,
+                                      height: 100,
+                                      color: Colors.white.withOpacity(0.8),
                                     ),
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.smoke_free,
-                                        color: Colors.white,
-                                        size: 40,
-                                      ),
-                                    ),
-                                  );
-                                },
+                                  
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                          
+                          // Login button on the right
+                          FadeTransition(
+                            opacity: _logoFadeAnimation,
+                            child: GestureDetector(
+                              onTap: _navigateToLogin,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.15),
+                                  borderRadius: BorderRadius.circular(25),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.3),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(25),
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                    child: Text(
+                                      'Log in',
+                                      style: TextStyle(
+                                        color: Colors.white.withOpacity(0.9),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
 
@@ -201,43 +233,101 @@ class _SplashScreenState extends State<SplashScreen>
                                   children: [
                                     const SizedBox(height: 24),
 
-                                    // Tagline in Danish
+                                    // Title
                                     SlideTransition(
                                       position: _slideAnimation,
                                       child: FadeTransition(
                                         opacity: _fadeAnimation,
-                                        child: Text(
-                                          'Din rejse til et røgfrit liv starter her',
+                                        child: RichText(
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.white.withOpacity(0.9),
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w300,
-                                            height: 1.4,
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: 'Find peace on your way to a\n',
+                                                style: TextStyle(
+                                                  color: Colors.white.withOpacity(0.95),
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w400,
+                                                  height: 1.3,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: 'smoke-free life',
+                                                style: TextStyle(
+                                                  color: const Color(0xFF7DD3FC),
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w600,
+                                                  height: 1.3,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
                                     ),
 
-                                    const SizedBox(height: 32),
+                                    const SizedBox(height: 24),
 
-                                    // Loading indicator
+                                    // Subtitle
+                                    SlideTransition(
+                                      position: _slideAnimation,
+                                      child: FadeTransition(
+                                        opacity: _fadeAnimation,
+                                        child: Text(
+                                          'A calm and supportive approach to quitting smoking, which helps you find balance and well-being in your everyday life.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.white.withOpacity(0.85),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w300,
+                                            height: 1.5,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 40),
+
+                                    // Begin Journey Button
                                     FadeTransition(
                                       opacity: _fadeAnimation,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(16),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(50),
-                                        ),
-                                        child: const SizedBox(
-                                          width: 24,
-                                          height: 24,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 3,
-                                            valueColor: AlwaysStoppedAnimation<Color>(
-                                              Color(0xFF7DD3FC),
-                                            ),
+                                      child: GestureDetector(
+                                        onTap: _navigateToLogin,
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 16,
+                                            horizontal: 32,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromARGB(255, 92, 166, 201),
+                                            borderRadius: BorderRadius.circular(30),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: const Color.fromARGB(255, 86, 151, 182).withOpacity(0.3),
+                                                blurRadius: 12,
+                                                offset: const Offset(0, 4),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Begin your journey',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Icon(
+                                                Icons.arrow_forward,
+                                                color: Colors.white,
+                                                size: 20,
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -257,7 +347,7 @@ class _SplashScreenState extends State<SplashScreen>
                       child: FadeTransition(
                         opacity: _fadeAnimation,
                         child: Text(
-                          '© 2025 Ryge Stop. Alle rettigheder forbeholdes.',
+                          '© 2025 Smoke Stop. All rights reserved.',
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.7),
                             fontSize: 14,

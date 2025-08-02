@@ -103,7 +103,7 @@ class _SplashScreenState extends State<SplashScreen>
                       width: 120,
                       height: 120,
                       child: Image.asset(
-                        'assets/images/simpelt_stop_logo_new.png',
+                        'assets/images/logo.png',
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) {
                           return const SizedBox.shrink();

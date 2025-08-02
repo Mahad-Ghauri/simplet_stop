@@ -23,11 +23,16 @@ void main() async {
   // Initialize SharedPreferences
   await StorageService.init();
 
-  runApp(const MyApp());
+  // Initialize LocalizationService
+  final localizationService = LocalizationService();
+  await localizationService.initialize();
+
+  runApp(MyApp(localizationService: localizationService));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final LocalizationService localizationService;
+  const MyApp({super.key, required this.localizationService});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +42,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProgressProvider()),
         ChangeNotifierProvider(create: (_) => AudioPlayerProvider()),
         ChangeNotifierProvider(create: (_) => PaymentProvider()),
-        ChangeNotifierProvider(create: (_) => LocalizationService()),
+        ChangeNotifierProvider(create: (_) => localizationService),
       ],
       child: Consumer<LocalizationService>(
         builder: (context, localizationService, child) {
@@ -45,7 +50,12 @@ class MyApp extends StatelessWidget {
             title: 'SimpeltStop',
             theme: AppTheme.lightTheme,
             locale: Locale(localizationService.currentLanguage),
-            supportedLocales: const [Locale('en'), Locale('es'), Locale('fr')],
+            supportedLocales: const [
+              Locale('en'),
+              Locale('es'),
+              Locale('fr'),
+              Locale('da'),
+            ],
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
@@ -55,36 +65,7 @@ class MyApp extends StatelessWidget {
             routes: AppRoutes.routes,
             onGenerateRoute: AppRoutes.onGenerateRoute,
             debugShowCheckedModeBanner: false,
-            home: FutureBuilder(
-              future: localizationService.initialize(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Scaffold(
-                    backgroundColor: AppTheme.backgroundColor,
-                    body: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            color: AppTheme.primaryColor,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Loading SimpeltStop...',
-                            style: AppTheme.bodyLarge.copyWith(
-                              color: AppTheme.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-
-                // Once initialized, show the splash screen
-                return const SplashScreen();
-              },
-            ),
+            home: const SplashScreen(),
           );
         },
       ),

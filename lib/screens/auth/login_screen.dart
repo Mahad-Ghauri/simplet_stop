@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simplet_stop/providers/authentication/auth_provider.dart';
@@ -78,122 +76,190 @@ class _LoginScreenState extends State<LoginScreen> {
     AppRoutes.push(context, AppRoutes.forgotPassword);
   }
 
+  // FIXED: Improved language selector with better error handling and debugging
   void _showLanguageSelector(
     BuildContext context,
     LocalizationService localizationService,
   ) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              localizationService.tr('profile.language'),
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            ...localizationService.getSupportedLanguages().entries.map(
-              (entry) => ListTile(
-                leading: Text(
-                  _getLanguageFlag(entry.key),
-                  style: const TextStyle(fontSize: 24),
-                ),
-                title: Text(entry.value),
-                trailing: entry.key == localizationService.currentLanguage
-                    ? const Icon(Icons.check, color: Color(0xFF4CAF50))
-                    : null,
-                onTap: () async {
-                  await localizationService.changeLanguage(entry.key);
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-  }
+    print('Language selector tapped!'); // Debug print
 
-  @override
-  Widget build(BuildContext context) {
-    return Consumer2<AuthProvider, LocalizationService>(
-      builder: (context, authProvider, localizationService, child) {
-        return Scaffold(
-          body: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFFE8F5E8), // Light green at top
-                  Color(0xFFF0F8F0), // Lighter green at bottom
-                ],
+    showModalBottomSheet(
+          context: context,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          enableDrag: true,
+          isDismissible: true,
+          builder: (BuildContext bottomSheetContext) {
+            print('Building language selector modal'); // Debug print
+
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
-            ),
-            child: SafeArea(
-              child: LoadingOverlay(
-                isLoading: authProvider.isLoading,
-                loadingMessage: localizationService.tr('auth.signing_in'),
-                child: Stack(
+              padding: const EdgeInsets.all(20),
+              child: SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Language toggle button in top right
-                    Positioned(
-                      top: 16,
-                      right: 16,
-                      child: GestureDetector(
-                        onTap: () {
-                          _showLanguageSelector(context, localizationService);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Text(
-                            _getLanguageFlag(
-                              localizationService.currentLanguage,
-                            ),
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                        ),
+                    // Handle bar
+                    Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2),
                       ),
                     ),
+                    const SizedBox(height: 20),
 
-                    // FIXED: Main content with proper scrollable layout
-                    SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(24, 60, 24, 20),
+                    // Title
+                    Text(
+                      localizationService.tr('profile.language'),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Language options
+                    ...localizationService.getSupportedLanguages().entries.map((
+                      entry,
+                    ) {
+                      final isSelected =
+                          entry.key == localizationService.currentLanguage;
+
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () async {
+                              print(
+                                'Language selected: ${entry.key}',
+                              ); // Debug print
+
+                              try {
+                                await localizationService.changeLanguage(
+                                  entry.key,
+                                );
+                                print(
+                                  'Language changed successfully',
+                                ); // Debug print
+
+                                if (bottomSheetContext.mounted) {
+                                  Navigator.pop(bottomSheetContext);
+                                }
+                              } catch (e) {
+                                print(
+                                  'Error changing language: $e',
+                                ); // Debug print
+                              }
+                            },
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? const Color(0xFF4CAF50).withOpacity(0.1)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(12),
+                                border: isSelected
+                                    ? Border.all(
+                                        color: const Color(0xFF4CAF50),
+                                        width: 1,
+                                      )
+                                    : null,
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    _getLanguageFlag(entry.key),
+                                    style: const TextStyle(fontSize: 24),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Text(
+                                      entry.value,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: isSelected
+                                            ? FontWeight.w600
+                                            : FontWeight.normal,
+                                        color: isSelected
+                                            ? const Color(0xFF4CAF50)
+                                            : Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                  if (isSelected)
+                                    const Icon(
+                                      Icons.check_circle,
+                                      color: Color(0xFF4CAF50),
+                                      size: 20,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            );
+          },
+        )
+        .then((value) {
+          print('Language selector modal closed'); // Debug print
+        })
+        .catchError((error) {
+          print('Error showing language selector: $error'); // Debug print
+        });
+  }
+
+  // Fixed version - key changes in the build method
+
+@override
+Widget build(BuildContext context) {
+  return Consumer2<AuthProvider, LocalizationService>(
+    builder: (context, authProvider, localizationService, child) {
+      return Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFE8F5E8), // Light green at top
+                Color(0xFFF0F8F0), // Lighter green at bottom
+              ],
+            ),
+          ),
+          child: SafeArea(
+            child: Stack(
+              children: [
+                // Main content with proper spacing for language button
+                Positioned.fill(
+                  child: LoadingOverlay(
+                    isLoading: authProvider.isLoading,
+                    loadingMessage: localizationService.tr('auth.signing_in'),
+                    child: SingleChildScrollView(
+                      // FIXED: Added top padding to account for language button
+                      padding: const EdgeInsets.fromLTRB(24, 80, 24, 20), // Increased top padding from 60 to 80
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
-                          minHeight: MediaQuery.of(context).size.height - 
-                                    MediaQuery.of(context).padding.top - 
-                                    MediaQuery.of(context).padding.bottom - 80,
+                          minHeight:
+                              MediaQuery.of(context).size.height -
+                              MediaQuery.of(context).padding.top -
+                              MediaQuery.of(context).padding.bottom -
+                              100, // Adjusted to account for new padding
                         ),
                         child: IntrinsicHeight(
                           child: Column(
@@ -217,22 +283,24 @@ class _LoginScreenState extends State<LoginScreen> {
                                   key: _formKey,
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      // Logo using new PNG - FIXED: Added error handling
+                                      // Logo with error handling
                                       SizedBox(
                                         height: 80,
                                         child: Image.asset(
                                           'assets/images/simpelt_stop_logo_new.png',
                                           height: 80,
                                           fit: BoxFit.contain,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return const Icon(
-                                              Icons.app_registration,
-                                              size: 80,
-                                              color: Color(0xFF4CAF50),
-                                            );
-                                          },
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                                return const Icon(
+                                                  Icons.app_registration,
+                                                  size: 80,
+                                                  color: Color(0xFF4CAF50),
+                                                );
+                                              },
                                         ),
                                       ),
 
@@ -240,7 +308,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                       // Welcome text
                                       Text(
-                                        localizationService.tr('auth.welcome'),
+                                        localizationService.tr(
+                                          'auth.welcome',
+                                        ),
                                         style: const TextStyle(
                                           fontSize: 32,
                                           fontWeight: FontWeight.bold,
@@ -263,10 +333,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                       // Email field
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            localizationService.tr('auth.email'),
+                                            localizationService.tr(
+                                              'auth.email',
+                                            ),
                                             style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
@@ -277,15 +350,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                           Container(
                                             decoration: BoxDecoration(
                                               color: Colors.grey[50],
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                               border: Border.all(
                                                 color: Colors.grey[200]!,
                                               ),
                                             ),
                                             child: TextFormField(
                                               controller: _emailController,
-                                              validator: Validators.validateEmail,
-                                              keyboardType: TextInputType.emailAddress,
+                                              validator:
+                                                  Validators.validateEmail,
+                                              keyboardType:
+                                                  TextInputType.emailAddress,
                                               decoration: InputDecoration(
                                                 hintText: 'din@email.dk',
                                                 hintStyle: TextStyle(
@@ -296,10 +372,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   color: Colors.grey[400],
                                                 ),
                                                 border: InputBorder.none,
-                                                contentPadding: const EdgeInsets.symmetric(
-                                                  horizontal: 16,
-                                                  vertical: 16,
-                                                ),
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 16,
+                                                    ),
                                               ),
                                             ),
                                           ),
@@ -310,13 +387,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                       // Password field
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
                                             children: [
                                               Text(
-                                                localizationService.tr('auth.password'),
+                                                localizationService.tr(
+                                                  'auth.password',
+                                                ),
                                                 style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
@@ -324,13 +406,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 ),
                                               ),
                                               TextButton(
-                                                onPressed: _navigateToForgotPassword,
+                                                onPressed:
+                                                    _navigateToForgotPassword,
                                                 child: Text(
-                                                  localizationService.tr('auth.forgot_code'),
+                                                  localizationService.tr(
+                                                    'auth.forgot_code',
+                                                  ),
                                                   style: const TextStyle(
                                                     color: Color(0xFF4CAF50),
                                                     fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
+                                                    fontWeight:
+                                                        FontWeight.w500,
                                                   ),
                                                 ),
                                               ),
@@ -340,14 +426,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                           Container(
                                             decoration: BoxDecoration(
                                               color: Colors.grey[50],
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                               border: Border.all(
                                                 color: Colors.grey[200]!,
                                               ),
                                             ),
                                             child: TextFormField(
                                               controller: _passwordController,
-                                              validator: Validators.validatePassword,
+                                              validator:
+                                                  Validators.validatePassword,
                                               obscureText: _obscurePassword,
                                               decoration: InputDecoration(
                                                 hintText: '••••••••',
@@ -367,15 +455,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   ),
                                                   onPressed: () {
                                                     setState(() {
-                                                      _obscurePassword = !_obscurePassword;
+                                                      _obscurePassword =
+                                                          !_obscurePassword;
                                                     });
                                                   },
                                                 ),
                                                 border: InputBorder.none,
-                                                contentPadding: const EdgeInsets.symmetric(
-                                                  horizontal: 16,
-                                                  vertical: 16,
-                                                ),
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 16,
+                                                    ),
                                               ),
                                             ),
                                           ),
@@ -402,11 +492,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     : Colors.transparent,
                                                 border: Border.all(
                                                   color: _rememberMe
-                                                      ? const Color(0xFF4CAF50)
+                                                      ? const Color(
+                                                          0xFF4CAF50,
+                                                        )
                                                       : Colors.grey[400]!,
                                                   width: 2,
                                                 ),
-                                                borderRadius: BorderRadius.circular(4),
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
                                               ),
                                               child: _rememberMe
                                                   ? const Icon(
@@ -425,7 +518,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                               });
                                             },
                                             child: Text(
-                                              localizationService.tr('auth.remember_me'),
+                                              localizationService.tr(
+                                                'auth.remember_me',
+                                              ),
                                               style: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black,
@@ -443,12 +538,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                         width: double.infinity,
                                         height: 52,
                                         child: ElevatedButton(
-                                          onPressed: authProvider.isLoading ? null : _login,
+                                          onPressed: authProvider.isLoading
+                                              ? null
+                                              : _login,
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: const Color(0xFF4CAF50),
+                                            backgroundColor: const Color(
+                                              0xFF4CAF50,
+                                            ),
                                             foregroundColor: Colors.white,
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                             elevation: 0,
                                           ),
@@ -456,16 +556,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                               ? const SizedBox(
                                                   width: 20,
                                                   height: 20,
-                                                  child: CircularProgressIndicator(
-                                                    color: Colors.white,
-                                                    strokeWidth: 2,
-                                                  ),
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        color: Colors.white,
+                                                        strokeWidth: 2,
+                                                      ),
                                                 )
                                               : Text(
-                                                  localizationService.tr('auth.sign_in'),
+                                                  localizationService.tr(
+                                                    'auth.sign_in',
+                                                  ),
                                                   style: const TextStyle(
                                                     fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
+                                                    fontWeight:
+                                                        FontWeight.w600,
                                                   ),
                                                 ),
                                         ),
@@ -482,17 +586,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                           children: [
                                             TextSpan(
-                                              text: '${localizationService.tr('auth.dont_have_account')} ',
+                                              text:
+                                                  '${localizationService.tr('auth.dont_have_account')} ',
                                             ),
                                             WidgetSpan(
                                               child: GestureDetector(
                                                 onTap: _navigateToRegister,
                                                 child: Text(
-                                                  localizationService.tr('auth.create_account_link'),
+                                                  localizationService.tr(
+                                                    'auth.create_account_link',
+                                                  ),
                                                   style: const TextStyle(
                                                     color: Color(0xFF4CAF50),
                                                     fontSize: 14,
-                                                    fontWeight: FontWeight.w600,
+                                                    fontWeight:
+                                                        FontWeight.w600,
                                                   ),
                                                 ),
                                               ),
@@ -507,7 +615,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       GestureDetector(
                                         onTap: _navigateToForgotPassword,
                                         child: Text(
-                                          localizationService.tr('auth.forgot_code'),
+                                          localizationService.tr(
+                                            'auth.forgot_code',
+                                          ),
                                           style: const TextStyle(
                                             color: Color(0xFF4CAF50),
                                             fontSize: 14,
@@ -520,12 +630,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
 
-                              // FIXED: Flexible spacer instead of Spacer() to prevent overflow
-                              Flexible(
-                                child: Container(
-                                  height: 40, // Minimum space before footer
-                                ),
-                              ),
+                              // Flexible spacer
+                              Flexible(child: Container(height: 40)),
 
                               // Copyright footer
                               Padding(
@@ -544,15 +650,62 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                
+                // Language toggle button (positioned on top with higher z-index)
+                Positioned(
+                  top: 16,
+                  right: 16,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        _showLanguageSelector(context, localizationService);
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.9),
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              _getLanguageFlag(
+                                localizationService.currentLanguage,
+                              ),
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                            const SizedBox(width: 4),
+                            Icon(
+                              Icons.keyboard_arrow_down,
+                              size: 16,
+                              color: Colors.grey[600],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
 
   String _getLanguageFlag(String languageCode) {
     switch (languageCode) {

@@ -63,12 +63,12 @@ class AudioPlayerScreen extends StatelessWidget {
                 // Debug Info (only in debug mode)
 
                 // Debug Info (only in debug mode)
-                if (kDebugMode)
-                  Consumer<AudioPlayerProvider>(
-                    builder: (context, audioProvider, child) {
-                      return _buildDebugInfo(audioProvider);
-                    },
-                  ),
+                // if (kDebugMode)
+                //   Consumer<AudioPlayerProvider>(
+                //     builder: (context, audioProvider, child) {
+                //       return _buildDebugInfo(audioProvider);
+                //     },
+                //   ),
 
                 const SizedBox(height: 20),
 
@@ -279,52 +279,52 @@ class AudioPlayerScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDebugInfo(AudioPlayerProvider audioProvider) {
-    return Card(
-      color: Colors.grey.shade100,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Debug Info',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey.shade700,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'State: ${audioProvider.playerState.name}',
-              style: const TextStyle(fontSize: 12),
-            ),
-            Text(
-              'Is Playing: ${audioProvider.isPlaying}',
-              style: const TextStyle(fontSize: 12),
-            ),
-            Text(
-              'Is Loading: ${audioProvider.isLoading}',
-              style: const TextStyle(fontSize: 12),
-            ),
-            Text(
-              'Duration: ${audioProvider.formatDuration(audioProvider.duration)}',
-              style: const TextStyle(fontSize: 12),
-            ),
-            Text(
-              'Position: ${audioProvider.formatDuration(audioProvider.position)}',
-              style: const TextStyle(fontSize: 12),
-            ),
-            if (audioProvider.currentAudio != null)
-              Text(
-                'Audio URL: ${audioProvider.currentAudio!.audioUrl}',
-                style: const TextStyle(fontSize: 12),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildDebugInfo(AudioPlayerProvider audioProvider) {
+  //   return Card(
+  //     color: Colors.grey.shade100,
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(12.0),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text(
+  //             'Debug Info',
+  //             style: TextStyle(
+  //               fontWeight: FontWeight.bold,
+  //               color: Colors.grey.shade700,
+  //             ),
+  //           ),
+  //           const SizedBox(height: 8),
+  //           Text(
+  //             'State: ${audioProvider.playerState.name}',
+  //             style: const TextStyle(fontSize: 12),
+  //           ),
+  //           Text(
+  //             'Is Playing: ${audioProvider.isPlaying}',
+  //             style: const TextStyle(fontSize: 12),
+  //           ),
+  //           Text(
+  //             'Is Loading: ${audioProvider.isLoading}',
+  //             style: const TextStyle(fontSize: 12),
+  //           ),
+  //           Text(
+  //             'Duration: ${audioProvider.formatDuration(audioProvider.duration)}',
+  //             style: const TextStyle(fontSize: 12),
+  //           ),
+  //           Text(
+  //             'Position: ${audioProvider.formatDuration(audioProvider.position)}',
+  //             style: const TextStyle(fontSize: 12),
+  //           ),
+  //           if (audioProvider.currentAudio != null)
+  //             Text(
+  //               'Audio URL: ${audioProvider.currentAudio!.audioUrl}',
+  //               style: const TextStyle(fontSize: 12),
+  //               maxLines: 2,
+  //               overflow: TextOverflow.ellipsis,
+  //             ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }
